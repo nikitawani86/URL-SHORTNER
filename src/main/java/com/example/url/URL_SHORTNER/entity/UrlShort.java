@@ -26,7 +26,7 @@ public class UrlShort {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String originaltUrl;
+	private String originalUrl;
 	
 	@Column(unique = true)
 	private String shortCode;

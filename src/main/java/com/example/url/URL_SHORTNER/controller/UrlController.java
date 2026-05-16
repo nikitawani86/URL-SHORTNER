@@ -1,6 +1,13 @@
 package com.example.url.URL_SHORTNER.controller;
 
+import java.net.URI;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +32,15 @@ public class UrlController {
 		String shortUrl = service.generateShortUrl(request.getOriginalUrl());
 		
 		return new UrlrResponse(shortUrl);
+	}
+	
+	@GetMapping("/{shortcode}")
+	public ResponseEntity<Void> redirect(@PathVariable String shortcode){
+		String originalUrl = service.getOriginalUrl(shortcode);
+		
+		return ResponseEntity.status(HttpStatus.FOUND)
+					.location(URI.create(originalUrl))
+					.build();
 	}
 }
  	

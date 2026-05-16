@@ -17,7 +17,7 @@ public class UrlServiceImpl  implements UrlService{
 	public String generateShortUrl(String originalUrl) {
 		// TODO Auto-generated method stub
 		UrlShort url = UrlShort.builder()
-					.originaltUrl(originalUrl)
+					.originalUrl(originalUrl)
 					.createdAt(LocalDate.now())
 					.build();
 		
@@ -27,7 +27,7 @@ public class UrlServiceImpl  implements UrlService{
 		String shortcode = Base62util.encode(saved.getId());
 		saved.setShortCode(shortcode);
 		repo.save(saved);
-		return "https://localhost:8080"+shortcode;
+		return "https://localhost:8080/"+shortcode;
 		
 	}
 
@@ -36,7 +36,7 @@ public class UrlServiceImpl  implements UrlService{
 		// TODO Auto-generated method stub
 		return repo.findByShortCode(shortcode)
 				.orElseThrow(() -> new RuntimeException("URL Not Found"))
-				.getOriginaltUrl();
+				.getOriginalUrl();
 	}
 
 }

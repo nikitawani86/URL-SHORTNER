@@ -8,6 +8,8 @@ import com.example.url.URL_SHORTNER.entity.UrlShort;
 
 public interface urlShort  extends JpaRepository<UrlShort,Long>{
 	
-	Optional<UrlShort> findByShortCode(String shortcode);
+	Optional<UrlShort> findByShortCode(String shortCode);
+	
+	
 
 }
