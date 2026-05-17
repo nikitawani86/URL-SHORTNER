@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
+import com.example.url.URL_SHORTNER.Exception.URLNotFoundException;
 import com.example.url.URL_SHORTNER.entity.UrlShort;
 import com.example.url.URL_SHORTNER.repository.urlShort;
 
@@ -35,7 +36,7 @@ public class UrlServiceImpl  implements UrlService{
 	public String getOriginalUrl(String shortcode) {
 		// TODO Auto-generated method stub
 		return repo.findByShortCode(shortcode)
-				.orElseThrow(() -> new RuntimeException("URL Not Found"))
+				.orElseThrow(() -> new URLNotFoundException("Short URL Not Found."))
 				.getOriginalUrl();
 	}
 
