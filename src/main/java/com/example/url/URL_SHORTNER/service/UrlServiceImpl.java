@@ -7,15 +7,20 @@ import org.springframework.stereotype.Service;
 import com.example.url.URL_SHORTNER.Exception.URLNotFoundException;
 import com.example.url.URL_SHORTNER.entity.UrlShort;
 import com.example.url.URL_SHORTNER.repository.urlShort;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UrlServiceImpl  implements UrlService{
+	
+	private static final Logger Log  = LoggerFactory.getLogger(UrlServiceImpl.class);
+	
 	private final urlShort repo;
 	@Override
 	public String generateShortUrl(String originalUrl) {
+		
 		// TODO Auto-generated method stub
 		UrlShort url = UrlShort.builder()
 					.originalUrl(originalUrl)
@@ -26,6 +31,7 @@ public class UrlServiceImpl  implements UrlService{
 		UrlShort saved = repo.save(url);
 		//generate short code
 		String shortcode = Base62util.encode(saved.getId());
+		Log.info("Generated Short Code: {}"+shortcode);
 		saved.setShortCode(shortcode);
 		repo.save(saved);
 		return "https://localhost:8080/"+shortcode;
