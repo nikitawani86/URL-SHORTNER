@@ -42,7 +42,7 @@ public class UrlShort {
 
 	private String shortCode;
 	
-	private Long clickCount;
+	private Long clickCount = 0L;
 	
 	private LocalDateTime lasAccessedAt;
 	
