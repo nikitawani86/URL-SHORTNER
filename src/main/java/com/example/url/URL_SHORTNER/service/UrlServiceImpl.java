@@ -1,6 +1,7 @@
 package com.example.url.URL_SHORTNER.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,6 @@ public class UrlServiceImpl  implements UrlService{
 		// TODO Auto-generated method stub
 		UrlShort url = UrlShort.builder()
 					.originalUrl(originalUrl)
-					.createdAt(LocalDate.now())
 					.build();
 		
 		//Save first to get ID
@@ -39,11 +39,17 @@ public class UrlServiceImpl  implements UrlService{
 	}
 
 	@Override
-	public String getOriginalUrl(String shortcode) {
+	public String redirect(String shortcode) {
 		// TODO Auto-generated method stub
-		return repo.findByShortCode(shortcode)
-				.orElseThrow(() -> new URLNotFoundException("Short URL Not Found."))
-				.getOriginalUrl();
+		UrlShort url = repo.findByShortCode(shortcode)
+				.orElseThrow(() -> new URLNotFoundException("Short URL Not Found."));
+		
+		url.setClickCount(url.getClickCount()+1);
+		url.setLasAccessedAt(LocalDateTime.now());
+		repo.save(url);
+		return url.getOriginalUrl();
+				
 	}
 
+	
 }
