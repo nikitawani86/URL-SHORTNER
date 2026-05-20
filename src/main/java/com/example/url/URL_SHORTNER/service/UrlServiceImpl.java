@@ -32,6 +32,7 @@ public class UrlServiceImpl  implements UrlService{
 		//generate short code
 		String shortcode = Base62util.encode(saved.getId());
 		Log.info("Generated Short Code: {}"+shortcode);
+		saved.setClickCount(0L);
 		saved.setShortCode(shortcode);
 		repo.save(saved);
 		return "https://localhost:8080/"+shortcode;
@@ -43,7 +44,8 @@ public class UrlServiceImpl  implements UrlService{
 		// TODO Auto-generated method stub
 		UrlShort url = repo.findByShortCode(shortcode)
 				.orElseThrow(() -> new URLNotFoundException("Short URL Not Found."));
-		
+		Log.info("Click Count: {}" , url.getClickCount());
+		System.out.println("Click Count  : "+ url.getClickCount());
 		url.setClickCount(url.getClickCount()+1);
 		url.setLasAccessedAt(LocalDateTime.now());
 		repo.save(url);
