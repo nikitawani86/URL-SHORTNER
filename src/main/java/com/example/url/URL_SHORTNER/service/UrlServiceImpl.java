@@ -3,6 +3,8 @@ package com.example.url.URL_SHORTNER.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.example.url.URL_SHORTNER.Exception.URLNotFoundException;
@@ -19,6 +21,8 @@ public class UrlServiceImpl  implements UrlService{
 	private static final Logger Log  = LoggerFactory.getLogger(UrlServiceImpl.class);
 	
 	private final urlShort repo;
+	@Autowired
+	private RedisTemplate<String,String> redisTemplate;
 	@Override
 	public String generateShortUrl(String originalUrl) {
 		
@@ -42,6 +46,10 @@ public class UrlServiceImpl  implements UrlService{
 	@Override
 	public String redirect(String shortcode) {
 		// TODO Auto-generated method stub
+		String cacheUrl  = redisTemplate.opsForValue().get(shortcode);
+		if(cacheUrl != null) {
+			Log.info("cache hit");
+		}
 		UrlShort url = repo.findByShortCode(shortcode)
 				.orElseThrow(() -> new URLNotFoundException("Short URL Not Found."));
 		Log.info("Click Count: {}" , url.getClickCount());
