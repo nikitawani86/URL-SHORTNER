@@ -1,5 +1,6 @@
 package com.example.url.URL_SHORTNER.service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -46,14 +47,13 @@ public class UrlServiceImpl  implements UrlService{
 	@Override
 	public String redirect(String shortcode) {
 		// TODO Auto-generated method stub
-		String cacheUrl  = redisTemplate.opsForValue().get(shortcode);
-		if(cacheUrl != null) {
-			Log.info("cache hit");
-		}
+		
 		UrlShort url = repo.findByShortCode(shortcode)
 				.orElseThrow(() -> new URLNotFoundException("Short URL Not Found."));
 		Log.info("Click Count: {}" , url.getClickCount());
 		System.out.println("Click Count  : "+ url.getClickCount());
+		 redisTemplate.opsForValue().set(shortcode,url.getOriginalUrl() , Duration.ofMinutes(10));
+		
 		url.setClickCount(url.getClickCount()+1);
 		url.setLasAccessedAt(LocalDateTime.now());
 		repo.save(url);
