@@ -34,7 +34,7 @@ public class UrlController {
 	
 	@PostMapping("/shortUrl")
 	public UrlrResponse shortednUrl(@RequestBody @Valid UrlRequest request) {
-		String shortUrl = service.generateShortUrl(request.getOriginalUrl());
+		String shortUrl = service.generateShortUrl(request);
 		
 		return new UrlrResponse(shortUrl);
 	}

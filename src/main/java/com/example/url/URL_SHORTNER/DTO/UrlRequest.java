@@ -13,4 +13,6 @@ import lombok.Setter;
 public class UrlRequest {
 	@NotBlank
 	public String originalUrl;
+	
+	private String alias;
 }

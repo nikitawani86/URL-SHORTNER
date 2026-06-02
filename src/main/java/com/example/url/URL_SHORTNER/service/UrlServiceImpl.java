@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.example.url.URL_SHORTNER.DTO.UrlRequest;
 import com.example.url.URL_SHORTNER.Exception.URLNotFoundException;
 import com.example.url.URL_SHORTNER.entity.UrlShort;
 import com.example.url.URL_SHORTNER.repository.urlShort;
@@ -25,17 +26,22 @@ public class UrlServiceImpl  implements UrlService{
 	@Autowired
 	private RedisTemplate<String,String> redisTemplate;
 	@Override
-	public String generateShortUrl(String originalUrl) {
+	public String generateShortUrl(UrlRequest request) {
 		
 		// TODO Auto-generated method stub
 		UrlShort url = UrlShort.builder()
-					.originalUrl(originalUrl)
+					.originalUrl(request.getOriginalUrl())
 					.build();
 		
 		//Save first to get ID
 		UrlShort saved = repo.save(url);
 		//generate short code
-		String shortcode = Base62util.encode(saved.getId());
+		String shortcode ;
+		if(request.getAlias()!= null && !request.getAlias().isBlank()) {
+			shortcode = request.getAlias();
+		}else {
+			shortcode = Base62util.encode(saved.getId());
+		}
 		Log.info("Generated Short Code: {}"+shortcode);
 		saved.setClickCount(0L);
 		saved.setShortCode(shortcode);
@@ -55,7 +61,7 @@ public class UrlServiceImpl  implements UrlService{
 		 redisTemplate.opsForValue().set(shortcode,url.getOriginalUrl() , Duration.ofMinutes(10));
 		
 		url.setClickCount(url.getClickCount()+1);
-		url.setLasAccessedAt(LocalDateTime.now());
+		url.setLastAccessedAt(LocalDateTime.now());
 		repo.save(url);
 		return url.getOriginalUrl();
 				

@@ -44,7 +44,7 @@ public class UrlShort {
 	
 	private Long clickCount = 0L;
 	
-	private LocalDateTime lasAccessedAt;
+	private LocalDateTime lastAccessedAt;
 	
 	private LocalDateTime createdAt;
 	@PrePersist
