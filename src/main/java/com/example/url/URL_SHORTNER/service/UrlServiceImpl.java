@@ -3,11 +3,13 @@ package com.example.url.URL_SHORTNER.service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.example.url.URL_SHORTNER.DTO.StatResponseDTO;
 import com.example.url.URL_SHORTNER.DTO.UrlRequest;
 import com.example.url.URL_SHORTNER.Exception.URLNotFoundException;
 import com.example.url.URL_SHORTNER.entity.UrlShort;
@@ -65,6 +67,22 @@ public class UrlServiceImpl  implements UrlService{
 		repo.save(url);
 		return url.getOriginalUrl();
 				
+	}
+
+	@Override
+	public StatResponseDTO getStatus(String shortcode) {
+		// TODO Auto-generated method stub
+		
+		UrlShort url = repo.findByShortCode(shortcode).orElseThrow(() -> new URLNotFoundException("Short Url Not Found"));
+	StatResponseDTO response = new StatResponseDTO();
+response.setShortCode(url.getShortCode());
+response.setOriginalUrl(url.getOriginalUrl());
+response.setClickCount(url.getClickCount());
+response.setExpireAt(url.getExpireAt());
+response.setCreatedAt(url.getCreatedAt());
+response.setLastAccessedTime(url.getLastAccessedAt());
+	
+		return response;
 	}
 
 	

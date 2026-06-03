@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.url.URL_SHORTNER.DTO.StatResponseDTO;
 import com.example.url.URL_SHORTNER.DTO.UrlRequest;
 import com.example.url.URL_SHORTNER.DTO.UrlrResponse;
 import com.example.url.URL_SHORTNER.service.UrlService;
@@ -31,7 +32,7 @@ public class UrlController {
 	private static final Logger log = LoggerFactory.getLogger(UrlController.class);
 	
 
-	
+	//Create API for Generating URL
 	@PostMapping("/shortUrl")
 	public UrlrResponse shortednUrl(@RequestBody @Valid UrlRequest request) {
 		String shortUrl = service.generateShortUrl(request);
@@ -39,6 +40,7 @@ public class UrlController {
 		return new UrlrResponse(shortUrl);
 	}
 	
+	//get api for getting shortcode
 	@GetMapping("/{shortcode}")
 	public ResponseEntity<Void> redirect(@PathVariable String shortcode){
 		String originalUrl = service.redirect(shortcode);
@@ -47,6 +49,14 @@ public class UrlController {
 		return ResponseEntity.status(HttpStatus.FOUND)
 					.location(URI.create(originalUrl))
 					.build();
+	}
+	
+	//get api using status
+	
+	@GetMapping("/{shortcode}/status")
+	public ResponseEntity<StatResponseDTO> getStatys(@PathVariable String shortcode){
+		
+		return ResponseEntity.ok(service.getStatus(shortcode));
 	}
 }
  	

@@ -51,6 +51,6 @@ public class UrlShort {
 	public void prePresist() {
 		createdAt  = LocalDateTime.now();
 	}
-
+	private LocalDateTime expireAt;
 	
 }
