@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.url.URL_SHORTNER.DTO.StatResponseDTO;
 import com.example.url.URL_SHORTNER.DTO.UrlRequest;
 import com.example.url.URL_SHORTNER.Exception.URLNotFoundException;
+import com.example.url.URL_SHORTNER.Exception.UrlExpiredException;
 import com.example.url.URL_SHORTNER.entity.UrlShort;
 import com.example.url.URL_SHORTNER.repository.urlShort;
 import org.slf4j.Logger;
@@ -47,6 +50,7 @@ public class UrlServiceImpl  implements UrlService{
 		Log.info("Generated Short Code: {}"+shortcode);
 		saved.setClickCount(0L);
 		saved.setShortCode(shortcode);
+		saved.setExpireAt(request.getExpireAt());
 		repo.save(saved);
 		return "https://localhost:8080/"+shortcode;
 		
@@ -59,6 +63,9 @@ public class UrlServiceImpl  implements UrlService{
 		UrlShort url = repo.findByShortCode(shortcode)
 				.orElseThrow(() -> new URLNotFoundException("Short URL Not Found."));
 		Log.info("Click Count: {}" , url.getClickCount());
+		if(url.getExpireAt() != null && LocalDateTime.now() .isAfter(url.getExpireAt())) {
+			throw new UrlExpiredException("URL has been expired");
+		}
 		System.out.println("Click Count  : "+ url.getClickCount());
 		 redisTemplate.opsForValue().set(shortcode,url.getOriginalUrl() , Duration.ofMinutes(10));
 		
@@ -80,6 +87,7 @@ response.setOriginalUrl(url.getOriginalUrl());
 response.setClickCount(url.getClickCount());
 response.setExpireAt(url.getExpireAt());
 response.setCreatedAt(url.getCreatedAt());
+response.setExpireAt(url.getExpireAt());
 response.setLastAccessedTime(url.getLastAccessedAt());
 	
 		return response;
