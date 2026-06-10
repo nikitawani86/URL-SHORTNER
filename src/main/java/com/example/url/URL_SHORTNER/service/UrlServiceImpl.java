@@ -48,8 +48,12 @@ public class UrlServiceImpl  implements UrlService{
 			shortcode = Base62util.encode(saved.getId());
 		}
 		Log.info("Generated Short Code: {}"+shortcode);
+		if(request.getExpireAt()!= null && request.getExpireAt().isBefore(LocalDateTime.now())) {
+			throw new URLNotFoundException("Past Date and time not allowed");
+		}
 		saved.setClickCount(0L);
 		saved.setShortCode(shortcode);
+	
 		saved.setExpireAt(request.getExpireAt());
 		repo.save(saved);
 		return "https://localhost:8080/"+shortcode;
@@ -66,6 +70,8 @@ public class UrlServiceImpl  implements UrlService{
 		if(url.getExpireAt() != null && LocalDateTime.now() .isAfter(url.getExpireAt())) {
 			throw new UrlExpiredException("URL has been expired");
 		}
+		
+		
 		System.out.println("Click Count  : "+ url.getClickCount());
 		 redisTemplate.opsForValue().set(shortcode,url.getOriginalUrl() , Duration.ofMinutes(10));
 		
