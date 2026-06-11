@@ -16,6 +16,15 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(ex.getMessage());
 	}
+	@ExceptionHandler(UrlExpiredException.class)
+	public ResponseEntity<String>  handleUrlExpired(UrlExpiredException ex){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(ex.getMessage());
+	}
+	
+	public ResponseEntity<String> handleInvalidReques(InvalidRequest ex){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String,String>> handleValdiation(MethodArgumentNotValidException ex){
