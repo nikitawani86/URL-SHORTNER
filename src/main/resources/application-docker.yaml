@@ -2,13 +2,13 @@ spring:
    application:
      name: DOCKER_-PROFILE
    datasource:
-     url: jdbc:postgresql://host.docker.internal:5432/url_shortner
-     username: postgres
-     password: 2002
+     url: jdbc:postgresql://postgres:5432/url_shortner
+     username: ${DB_USERNAME}
+     password: ${DB_PASSWORD}
 
    data:
      redis:
-       host: host.docker.internal
+       host: redis
        port: 6379
 
    logging:
