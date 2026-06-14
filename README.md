@@ -33,7 +33,7 @@ The system converts long URLs into short, shareable links and supports fast redi
 ### 1. Clone the project
 
 ```bash
-git clone https://github.com/your-username/url-shortener.git
+git clone https://github.com/nikitawani86/url-shortener.git
 cd url-shortener
 ```
 
