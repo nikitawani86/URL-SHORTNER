@@ -1,0 +1,16 @@
+spring:
+   application:
+     name: DOCKER_-PROFILE
+   datasource:
+     url: jdbc:postgresql://host.docker.internal:5432/url_shortner
+     username: postgres
+     password: 2002
+
+   data:
+     redis:
+       host: host.docker.internal
+       port: 6379
+
+   logging:
+    level: 
+      org.springbootframework.boot.context.config: DEBUG
